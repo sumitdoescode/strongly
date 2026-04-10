@@ -10,8 +10,8 @@ import { completeProfileSchema, updateProfileSchema } from "@/schemas/schema";
 
 const TIME_ZONE = "Asia/Kolkata";
 
-// GET => /api/user, get own profile
-export const GET = async (_request: NextRequest) => {
+// GET => /api/me, get own profile
+export const GET = async (request: NextRequest) => {
     try {
         await connectDB();
 
@@ -61,7 +61,7 @@ export const GET = async (_request: NextRequest) => {
         const uniqueAttendanceDates = [...new Set(attendances.map((attendance) => new Date(attendance.createdAt).toLocaleDateString("en-CA", { timeZone: TIME_ZONE })))];
 
         let streak = 0;
-        let streakDate = new Date();
+        const streakDate = new Date();
 
         if (uniqueAttendanceDates[0] !== today) {
             streakDate.setDate(streakDate.getDate() - 1);
@@ -98,7 +98,7 @@ export const GET = async (_request: NextRequest) => {
     }
 };
 
-// POST => /api/user, complete user profile
+// POST => /api/me, complete own profile
 export const POST = async (request: NextRequest) => {
     try {
         await connectDB();
@@ -161,7 +161,7 @@ export const POST = async (request: NextRequest) => {
     }
 };
 
-// PATCH => /api/user, update user profile
+// PATCH => /api/me, update own profile
 export const PATCH = async (request: NextRequest) => {
     try {
         await connectDB();

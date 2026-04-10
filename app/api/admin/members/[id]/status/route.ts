@@ -5,8 +5,8 @@ import { auth } from "@/lib/auth";
 import connectDB from "@/lib/db";
 import Member from "@/models/Member";
 
-// PATCH => /api/admin/members/[id]/toggle
-export const PATCH = async (_request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+// PATCH => /api/admin/members/[id]/status
+export const PATCH = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
     try {
         await connectDB();
 

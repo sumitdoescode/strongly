@@ -8,9 +8,8 @@ import { Types, isValidObjectId } from "mongoose";
 
 const TIME_ZONE = "Asia/Kolkata";
 
-// mark an attendance
-// POST => /api/attendance
-export const POST = async () => {
+// POST => /api/attendances, mark an attendance
+export const POST = async (request: NextRequest) => {
     try {
         await connectDB();
 
@@ -50,7 +49,7 @@ export const POST = async () => {
     }
 };
 
-// GET => /api/attendance
+// GET => /api/attendances, get all attendances of a member
 export const GET = async (request: NextRequest) => {
     try {
         await connectDB();

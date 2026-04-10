@@ -7,8 +7,8 @@ import connectDB from "@/lib/db";
 import Member from "@/models/Member";
 import { updateMemberSchema } from "@/schemas/schema";
 
-// GET => /api/admin/member/[id]
-export const GET = async (_request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+// GET => /api/admin/members/[id]
+export const GET = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
     try {
         await connectDB();
 
@@ -42,7 +42,7 @@ export const GET = async (_request: NextRequest, { params }: { params: Promise<{
     }
 };
 
-// PATCH => /api/admin/member/[id]
+// PATCH => /api/admin/members/[id]
 export const PATCH = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
     try {
         await connectDB();

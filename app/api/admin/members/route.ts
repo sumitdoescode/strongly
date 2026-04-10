@@ -7,7 +7,7 @@ import { flattenError } from "zod";
 import Member from "@/models/Member";
 
 // add member (can be accessed by admin only)
-// POST => /api/admin/member
+// POST => /api/admin/members
 export const POST = async (request: NextRequest) => {
     try {
         await connectDB();
@@ -45,7 +45,7 @@ export const POST = async (request: NextRequest) => {
 };
 
 // get all members (can be accessed by admin only)
-// GET => /api/admin/member
+// GET => /api/admin/members
 export const GET = async (request: NextRequest) => {
     try {
         await connectDB();
