@@ -11,7 +11,7 @@ import { completeProfileSchema, updateProfileSchema } from "@/schemas/schema";
 const TIME_ZONE = "Asia/Kolkata";
 
 // GET => /api/me, get own profile
-export const GET = async (request: NextRequest) => {
+export const GET = async () => {
     try {
         await connectDB();
 
@@ -28,7 +28,7 @@ export const GET = async (request: NextRequest) => {
             return NextResponse.json({ success: false, error: "Profile is not completed" }, { status: 400 });
         }
 
-        const member = await Member.findById(session.user.memberId).select("_id fullName gymCode phone").lean();
+        const member = await Member.findById(session.user.memberId).select("_id fullName gymCode").lean();
 
         if (!member) {
             return NextResponse.json({ success: false, error: "Member not found" }, { status: 404 });
@@ -87,7 +87,7 @@ export const GET = async (request: NextRequest) => {
                         totalAttendance,
                         thisMonthAttendance,
                         streak,
-                        member,
+                        ...member,
                     },
                 },
             },

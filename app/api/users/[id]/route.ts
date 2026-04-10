@@ -9,7 +9,7 @@ import Member from "@/models/Member";
 const TIME_ZONE = "Asia/Kolkata";
 
 // GET => /api/users/[id], get another user's profile
-export const GET = async (_request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
+export const GET = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
     try {
         await connectDB();
 
@@ -49,7 +49,7 @@ export const GET = async (_request: NextRequest, { params }: { params: Promise<{
             return NextResponse.json({ success: false, error: "User profile not found" }, { status: 404 });
         }
 
-        const member = await Member.findById(user.memberId).select("_id fullName gymCode phone").lean();
+        const member = await Member.findById(user.memberId).select("_id fullName").lean();
 
         if (!member) {
             return NextResponse.json({ success: false, error: "Member not found" }, { status: 404 });
@@ -99,25 +99,19 @@ export const GET = async (_request: NextRequest, { params }: { params: Promise<{
             streakDate.setDate(streakDate.getDate() - 1);
         }
 
-        return NextResponse.json(
-            {
-                success: true,
-                data: {
-                    user: {
-                        id: user._id.toString(),
-                        name: user.name,
-                        image: user.image,
-                        role: user.role,
-                        isProfileCompleted: user.isProfileCompleted,
-                        totalAttendance,
-                        thisMonthAttendance,
-                        streak,
-                        member,
-                    },
-                },
-            },
-            { status: 200 },
-        );
+        const userResponse = {
+            id: user._id.toString(),
+            name: user.name,
+            image: user.image,
+            role: user.role,
+            isProfileCompleted: user.isProfileCompleted,
+            totalAttendance,
+            thisMonthAttendance,
+            streak,
+            ...member,
+        };
+
+        return NextResponse.json({ success: true, user: userResponse }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ success: false, error: error instanceof Error ? error.message : "Internal Server Error" }, { status: 500 });
     }
