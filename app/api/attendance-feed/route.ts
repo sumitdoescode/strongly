@@ -35,6 +35,7 @@ const getDateLabel = (dateString: string) => {
     });
 };
 
+// GET => /api/attendance-feed, get attendance feed
 export const GET = async (request: NextRequest) => {
     try {
         await connectDB();
