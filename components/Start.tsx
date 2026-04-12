@@ -14,7 +14,7 @@ const Start = () => {
                     <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mt-6">Thousands are transforming fitness with smart tracking—join them.</p>
 
                     <Link href="/feed" className="mt-8 inline-block">
-                        <Button className={"rounded-full text-base text-primary-foreground font-semibold cursor-pointer"} size={"lg"}>
+                        <Button className={"rounded-full text-base cursor-pointer"} size={"lg"} variant={"outline"}>
                             Get Started Now
                         </Button>
                     </Link>

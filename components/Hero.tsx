@@ -6,7 +6,7 @@ const Hero = async () => {
         <section className="min-h-[80vh] flex items-center">
             <Container>
                 <div className="max-w-md sm:max-w-lg  md:max-w-3xl mx-auto">
-                    <h1 className="text-5xl sm:text-6xl md:text-7xl font-black text-center text-foreground tracking-tight">
+                    <h1 className="text-5xl sm:text-6xl font-black text-center text-foreground tracking-tight">
                         Track <span className="text-primary">Attendance</span>
                         <br />
                         as it

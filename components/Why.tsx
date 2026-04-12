@@ -28,7 +28,9 @@ const Why = () => {
         <section className="py-20">
             <Container>
                 <div>
-                    <h2 className="text-4xl sm:text-5xl font-black text-neutral-200 text-center">Why Go Digital ?</h2>
+                    <h2 className="text-4xl sm:text-5xl font-black text-neutral-200 text-center">
+                        Why Go <span className="text-primary">Digital?</span>
+                    </h2>
                 </div>
 
                 <div className="flex flex-col md:flex-row gap-10 mt-32 justify-between">
