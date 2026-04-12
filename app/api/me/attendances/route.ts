@@ -6,6 +6,18 @@ import connectDB from "@/lib/db";
 import Member from "@/models/Member";
 import Attendance from "@/models/Attendance";
 
+const TIME_ZONE = "Asia/Kolkata";
+const TIME_ZONE_OFFSET = "+05:30";
+
+const getTodayRange = (date: Date) => {
+    const today = date.toLocaleDateString("en-CA", { timeZone: TIME_ZONE });
+    const startOfToday = new Date(`${today}T00:00:00.000${TIME_ZONE_OFFSET}`);
+    const startOfTomorrow = new Date(startOfToday);
+    startOfTomorrow.setUTCDate(startOfTomorrow.getUTCDate() + 1);
+
+    return { startOfToday, startOfTomorrow };
+};
+
 // POST => /api/me/attendances, mark an attendance
 export const POST = async () => {
     try {
@@ -33,8 +45,26 @@ export const POST = async () => {
             return NextResponse.json({ success: false, error: "Member not found" }, { status: 404 });
         }
 
+        // only able to mark attendance if member is active
         if (!member.isActive) {
             return NextResponse.json({ success: false, error: "Your membership is inactive" }, { status: 403 });
+        }
+
+        const now = new Date();
+        const dayOfWeek = now.toLocaleDateString("en-US", { weekday: "long", timeZone: TIME_ZONE });
+
+        if (dayOfWeek === "Sunday") {
+            return NextResponse.json({ success: false, error: "Attendance not allowed on Sundays" }, { status: 400 });
+        }
+
+        const { startOfToday, startOfTomorrow } = getTodayRange(now);
+        const existingAttendance = await Attendance.findOne({
+            member: session.user.memberId,
+            createdAt: { $gte: startOfToday, $lt: startOfTomorrow },
+        }).select("_id");
+
+        if (existingAttendance) {
+            return NextResponse.json({ success: false, error: "Attendance already marked for today" }, { status: 400 });
         }
 
         await Attendance.create({
