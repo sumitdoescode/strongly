@@ -15,13 +15,11 @@ import { Badge } from "@/components/ui/badge";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 
 const MemberCard = ({ _id, fullName, gymCode, phone, isActive }: { _id: string; fullName: string; gymCode: string; phone?: string; isActive: boolean }) => {
-    const initialFormData = {
+    const [formData, setFormData] = useState({
         fullName,
         gymCode,
         phone: phone || "",
-    };
-
-    const [formData, setFormData] = useState(initialFormData);
+    });
     const [errors, setErrors] = useState({ fullName: "", gymCode: "", phone: "" });
     const [isUpdating, setIsUpdating] = useState(false);
     const [isStatusLoading, setIsStatusLoading] = useState(false);
@@ -115,7 +113,7 @@ const MemberCard = ({ _id, fullName, gymCode, phone, isActive }: { _id: string; 
 
                                 if (!nextOpen) {
                                     setErrors({ fullName: "", gymCode: "", phone: "" });
-                                    setFormData(initialFormData);
+                                    setFormData({ fullName, gymCode, phone: phone || "" });
                                 }
                             }}
                         >
