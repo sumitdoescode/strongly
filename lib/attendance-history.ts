@@ -4,13 +4,6 @@ import Member from "@/models/Member";
 
 const TIME_ZONE = "Asia/Kolkata";
 
-type AttendanceQuery = {
-    member: Types.ObjectId;
-    createdAt?: {
-        $gte: Date;
-    };
-};
-
 export const getAttendanceHistory = async (memberId: string, isOwnHistory: boolean) => {
     const member = await Member.findById(memberId).select("_id fullName gymCode phone isActive").lean();
 
@@ -18,7 +11,7 @@ export const getAttendanceHistory = async (memberId: string, isOwnHistory: boole
         return null;
     }
 
-    const query: AttendanceQuery = {
+    const query: { member: Types.ObjectId; createdAt?: { $gte: Date } } = {
         member: new Types.ObjectId(memberId),
     };
 

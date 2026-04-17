@@ -7,7 +7,10 @@ import { Button } from "@/components/ui/button";
 import FeedResults, { type FeedGroup } from "@/components/FeedResults";
 import MarkAttendanceButton from "@/components/MarkAttendanceButton";
 
-type FeedPageClientProps = {
+const FeedPageClient = ({
+    initialFeed,
+    initialPagination,
+}: {
     initialFeed: FeedGroup[];
     initialPagination: {
         page: number;
@@ -15,9 +18,7 @@ type FeedPageClientProps = {
         total: number;
         totalPages: number;
     };
-};
-
-const FeedPageClient = ({ initialFeed, initialPagination }: FeedPageClientProps) => {
+}) => {
     const [feed, setFeed] = useState(initialFeed);
     const [pagination, setPagination] = useState(initialPagination);
     const [isLoadingMore, setIsLoadingMore] = useState(false);

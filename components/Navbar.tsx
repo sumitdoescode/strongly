@@ -9,23 +9,18 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 
-type SessionUser = {
-    name?: string | null;
-    image?: string | null;
-    role?: string;
-};
-
 const Navbar = () => {
     const pathname = usePathname();
     const { data: session, isPending } = authClient.useSession();
-    const sessionUser = session?.user as SessionUser | undefined;
+    const sessionUser = session?.user;
+    const isAdmin = sessionUser && "role" in sessionUser && sessionUser.role === "admin";
 
     const links = sessionUser
         ? [
               { href: "/feed", label: "Feed", icon: Radio },
               { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
               { href: "/update-profile", label: "Profile", icon: Settings },
-              ...(sessionUser.role === "admin" ? [{ href: "/admin", label: "Admin", icon: ShieldUser }] : []),
+              ...(isAdmin ? [{ href: "/admin", label: "Admin", icon: ShieldUser }] : []),
           ]
         : [];
 
@@ -60,7 +55,7 @@ const Navbar = () => {
                             <div className="hidden items-center gap-3 md:flex">
                                 <div className="text-right">
                                     <p className="text-sm font-medium text-foreground">{sessionUser.name}</p>
-                                    <p className="text-xs text-muted-foreground">{sessionUser.role === "admin" ? "Admin" : "Member"}</p>
+                                    <p className="text-xs text-muted-foreground">{isAdmin ? "Admin" : "Member"}</p>
                                 </div>
                                 <Avatar size="lg">
                                     <AvatarImage src={sessionUser.image || ""} alt={sessionUser.name ?? undefined} />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type FormEvent, useState } from "react";
 import axios, { AxiosError } from "axios";
 import { ArrowRight, Key, PenTool } from "lucide-react";
 import { flattenError } from "zod";
@@ -11,37 +11,27 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 
-type UpdateProfileFormProps = {
-    initialValues: {
-        fullName: string;
-        gymCode: string;
-    };
-};
-
-type FormData = {
-    fullName: string;
-    gymCode: string;
-};
-
-type FormErrors = Partial<Record<keyof FormData, string[]>>;
-
-const UpdateProfileForm = ({ initialValues }: UpdateProfileFormProps) => {
-    const [formData, setFormData] = useState<FormData>(initialValues);
-    const [errors, setErrors] = useState<FormErrors>({});
+const UpdateProfileForm = ({ initialValues }: { initialValues: { fullName: string; gymCode: string } }) => {
+    const [formData, setFormData] = useState(initialValues);
+    const [errors, setErrors] = useState({ fullName: "", gymCode: "" });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const validation = updateProfileSchema.safeParse(formData);
         if (!validation.success) {
-            setErrors(flattenError(validation.error).fieldErrors);
+            const fieldErrors = flattenError(validation.error).fieldErrors;
+            setErrors({
+                fullName: fieldErrors.fullName?.[0] || "",
+                gymCode: fieldErrors.gymCode?.[0] || "",
+            });
             return;
         }
 
         try {
-            setErrors({});
+            setErrors({ fullName: "", gymCode: "" });
             setIsSubmitting(true);
             await axios.patch("/api/me", formData);
             toast.success("Profile updated successfully");
@@ -75,16 +65,14 @@ const UpdateProfileForm = ({ initialValues }: UpdateProfileFormProps) => {
                             value={formData.fullName}
                             onChange={(event) => {
                                 setFormData((current) => ({ ...current, fullName: event.target.value }));
-                                setErrors((current) => ({ ...current, fullName: undefined }));
+                                setErrors((current) => ({ ...current, fullName: "" }));
                             }}
                             className="h-14 border-zinc-800 bg-zinc-900/50 pl-12 text-base md:text-lg"
                             placeholder="Enter your full name"
                             aria-invalid={Boolean(errors.fullName)}
                         />
                     </div>
-                    {errors.fullName?.map((error) => (
-                        <FieldError key={error}>{error}</FieldError>
-                    ))}
+                    {errors.fullName ? <FieldError>{errors.fullName}</FieldError> : null}
                 </Field>
 
                 <Field>
@@ -98,16 +86,14 @@ const UpdateProfileForm = ({ initialValues }: UpdateProfileFormProps) => {
                             value={formData.gymCode}
                             onChange={(event) => {
                                 setFormData((current) => ({ ...current, gymCode: event.target.value }));
-                                setErrors((current) => ({ ...current, gymCode: undefined }));
+                                setErrors((current) => ({ ...current, gymCode: "" }));
                             }}
                             className="h-14 border-zinc-800 bg-zinc-900/50 pl-12 text-base md:text-lg"
                             placeholder="Enter your gym code"
                             aria-invalid={Boolean(errors.gymCode)}
                         />
                     </div>
-                    {errors.gymCode?.map((error) => (
-                        <FieldError key={error}>{error}</FieldError>
-                    ))}
+                    {errors.gymCode ? <FieldError>{errors.gymCode}</FieldError> : null}
                     {!errors.gymCode ? <FieldDescription>Ask your gym staff if you need to switch codes.</FieldDescription> : null}
                 </Field>
 

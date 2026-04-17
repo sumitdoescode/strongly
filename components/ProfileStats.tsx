@@ -1,19 +1,13 @@
 import { Calendar, Flame, Target } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/card";
 
-type ProfileStatsProps = {
-    totalAttendance: number;
-    thisMonthAttendance: number;
-    streak: number;
-};
-
 const statItems = [
     { key: "totalAttendance", label: "Total Attendance", icon: Target, tone: "text-primary bg-primary/10" },
     { key: "thisMonthAttendance", label: "This Month", icon: Calendar, tone: "text-sky-400 bg-sky-400/10" },
     { key: "streak", label: "Streak", icon: Flame, tone: "text-orange-400 bg-orange-400/10" },
 ] as const;
 
-const ProfileStats = ({ totalAttendance, thisMonthAttendance, streak }: ProfileStatsProps) => {
+const ProfileStats = ({ totalAttendance, thisMonthAttendance, streak }: { totalAttendance: number; thisMonthAttendance: number; streak: number }) => {
     const values = { totalAttendance, thisMonthAttendance, streak };
 
     return (

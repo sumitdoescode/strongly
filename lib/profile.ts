@@ -24,22 +24,6 @@ type UserDocument = {
     isProfileCompleted?: boolean;
 };
 
-export type UserProfileSummary = {
-    id: string;
-    name: string;
-    image: string;
-    role: string;
-    isProfileCompleted: boolean;
-    memberId: string;
-    fullName: string;
-    gymCode: string;
-    phone?: string;
-    isActive: boolean;
-    totalAttendance: number;
-    thisMonthAttendance: number;
-    streak: number;
-};
-
 const getAttendanceStats = async (memberId: string) => {
     const attendances = await Attendance.find({
         member: new Types.ObjectId(memberId),
@@ -117,7 +101,7 @@ const buildProfileSummary = async (user: UserDocument | SessionLikeUser) => {
         phone: member.phone || undefined,
         isActive: member.isActive,
         ...stats,
-    } satisfies UserProfileSummary;
+    };
 };
 
 export const getOwnProfileSummary = async (user: SessionLikeUser) => {

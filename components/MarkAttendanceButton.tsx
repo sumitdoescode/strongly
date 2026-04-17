@@ -7,12 +7,7 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
-type MarkAttendanceButtonProps = {
-    onSuccess?: () => void;
-    className?: string;
-};
-
-const MarkAttendanceButton = ({ onSuccess, className }: MarkAttendanceButtonProps) => {
+const MarkAttendanceButton = ({ onSuccess, className }: { onSuccess?: () => void; className?: string }) => {
     const [isLoading, setIsLoading] = useState(false);
     const router = useRouter();
 

@@ -1,20 +1,20 @@
 import { Clock3 } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
-export type AttendanceHistoryItem = {
-    _id: string;
-    date: string;
-    day: string;
-    time: string;
-};
-
-type AttendanceHistoryProps = {
+const AttendanceHistory = ({
+    attendanceHistory,
+    title = "Attendance History",
+    emptyMessage = "No attendance records yet.",
+}: {
     title?: string;
     emptyMessage?: string;
-    attendanceHistory: AttendanceHistoryItem[];
-};
-
-const AttendanceHistory = ({ attendanceHistory, title = "Attendance History", emptyMessage = "No attendance records yet." }: AttendanceHistoryProps) => {
+    attendanceHistory: {
+        _id: string;
+        date: string;
+        day: string;
+        time: string;
+    }[];
+}) => {
     return (
         <section className="mt-10">
             <h2 className="text-2xl font-black tracking-[-0.04em]">{title}</h2>

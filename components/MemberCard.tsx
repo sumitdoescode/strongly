@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
 import { flattenError, z } from "zod";
@@ -14,37 +14,21 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 
-type MemberCardProps = {
-    _id: string;
-    fullName: string;
-    gymCode: string;
-    phone?: string;
-    isActive: boolean;
-};
-
-type FormData = {
-    fullName: string;
-    gymCode: string;
-    phone: string;
-};
-
-type FormErrors = Partial<Record<keyof FormData, string[]>>;
-
 const updateMemberFormSchema = z.object({
     fullName: updateMemberSchema.shape.fullName,
     gymCode: updateMemberSchema.shape.gymCode,
     phone: z.union([z.literal(""), updateMemberSchema.shape.phone]).optional(),
 });
 
-const MemberCard = ({ _id, fullName, gymCode, phone, isActive }: MemberCardProps) => {
-    const initialFormData: FormData = {
+const MemberCard = ({ _id, fullName, gymCode, phone, isActive }: { _id: string; fullName: string; gymCode: string; phone?: string; isActive: boolean }) => {
+    const initialFormData = {
         fullName,
         gymCode,
         phone: phone || "",
     };
 
-    const [formData, setFormData] = useState<FormData>(initialFormData);
-    const [errors, setErrors] = useState<FormErrors>({});
+    const [formData, setFormData] = useState(initialFormData);
+    const [errors, setErrors] = useState({ fullName: "", gymCode: "", phone: "" });
     const [isUpdating, setIsUpdating] = useState(false);
     const [isStatusLoading, setIsStatusLoading] = useState(false);
     const [open, setOpen] = useState(false);
@@ -79,16 +63,21 @@ const MemberCard = ({ _id, fullName, gymCode, phone, isActive }: MemberCardProps
         }
     };
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const validation = updateMemberFormSchema.safeParse(normalizedFormData);
         if (!validation.success) {
-            setErrors(flattenError(validation.error).fieldErrors);
+            const fieldErrors = flattenError(validation.error).fieldErrors;
+            setErrors({
+                fullName: fieldErrors.fullName?.[0] || "",
+                gymCode: fieldErrors.gymCode?.[0] || "",
+                phone: fieldErrors.phone?.[0] || "",
+            });
             return;
         }
 
-        setErrors({});
+        setErrors({ fullName: "", gymCode: "", phone: "" });
         await updateMember();
     };
 
@@ -134,7 +123,7 @@ const MemberCard = ({ _id, fullName, gymCode, phone, isActive }: MemberCardProps
                                 setOpen(nextOpen);
 
                                 if (!nextOpen) {
-                                    setErrors({});
+                                    setErrors({ fullName: "", gymCode: "", phone: "" });
                                     setFormData(initialFormData);
                                 }
                             }}
@@ -162,15 +151,13 @@ const MemberCard = ({ _id, fullName, gymCode, phone, isActive }: MemberCardProps
                                                     value={formData.fullName}
                                                     onChange={(event) => {
                                                         setFormData((current) => ({ ...current, fullName: event.target.value }));
-                                                        setErrors((current) => ({ ...current, fullName: undefined }));
+                                                        setErrors((current) => ({ ...current, fullName: "" }));
                                                     }}
                                                     aria-invalid={Boolean(errors.fullName)}
                                                     className="h-12 pl-12"
                                                 />
                                             </div>
-                                            {errors.fullName?.map((error) => (
-                                                <FieldError key={error}>{error}</FieldError>
-                                            ))}
+                                            {errors.fullName ? <FieldError>{errors.fullName}</FieldError> : null}
                                         </Field>
 
                                         <Field className="space-y-0">
@@ -186,15 +173,13 @@ const MemberCard = ({ _id, fullName, gymCode, phone, isActive }: MemberCardProps
                                                     value={formData.gymCode}
                                                     onChange={(event) => {
                                                         setFormData((current) => ({ ...current, gymCode: event.target.value }));
-                                                        setErrors((current) => ({ ...current, gymCode: undefined }));
+                                                        setErrors((current) => ({ ...current, gymCode: "" }));
                                                     }}
                                                     aria-invalid={Boolean(errors.gymCode)}
                                                     className="h-12 pl-12"
                                                 />
                                             </div>
-                                            {errors.gymCode?.map((error) => (
-                                                <FieldError key={error}>{error}</FieldError>
-                                            ))}
+                                            {errors.gymCode ? <FieldError>{errors.gymCode}</FieldError> : null}
                                         </Field>
 
                                         <Field className="space-y-0">
@@ -210,15 +195,13 @@ const MemberCard = ({ _id, fullName, gymCode, phone, isActive }: MemberCardProps
                                                     value={formData.phone}
                                                     onChange={(event) => {
                                                         setFormData((current) => ({ ...current, phone: event.target.value }));
-                                                        setErrors((current) => ({ ...current, phone: undefined }));
+                                                        setErrors((current) => ({ ...current, phone: "" }));
                                                     }}
                                                     aria-invalid={Boolean(errors.phone)}
                                                     className="h-12 pl-12"
                                                 />
                                             </div>
-                                            {errors.phone?.map((error) => (
-                                                <FieldError key={error}>{error}</FieldError>
-                                            ))}
+                                            {errors.phone ? <FieldError>{errors.phone}</FieldError> : null}
                                             {!errors.phone ? <FieldDescription>Leave this empty if you do not want to save a phone number.</FieldDescription> : null}
                                         </Field>
 

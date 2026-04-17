@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
-import { flattenError } from "zod";
+import { flattenError, z } from "zod";
 import { Key, Loader2, Phone, User } from "lucide-react";
 import { toast } from "sonner";
 import { addMemberSchema } from "@/schemas/schema";
@@ -11,17 +11,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
-import { z } from "zod";
 
-type FormData = {
-    fullName: string;
-    gymCode: string;
-    phone: string;
-};
-
-type FormErrors = Partial<Record<keyof FormData, string[]>>;
-
-const initialFormData: FormData = {
+const initialFormData = {
     fullName: "",
     gymCode: "",
     phone: "",
@@ -34,8 +25,8 @@ const addMemberFormSchema = z.object({
 });
 
 const AddMemberDialog = () => {
-    const [formData, setFormData] = useState<FormData>(initialFormData);
-    const [errors, setErrors] = useState<FormErrors>({});
+    const [formData, setFormData] = useState(initialFormData);
+    const [errors, setErrors] = useState({ fullName: "", gymCode: "", phone: "" });
     const [isSaving, setIsSaving] = useState(false);
     const [open, setOpen] = useState(false);
     const router = useRouter();
@@ -56,7 +47,7 @@ const AddMemberDialog = () => {
             });
             toast.success("Member added successfully");
             setFormData(initialFormData);
-            setErrors({});
+            setErrors({ fullName: "", gymCode: "", phone: "" });
             setOpen(false);
             router.refresh();
         } catch (error: unknown) {
@@ -71,16 +62,21 @@ const AddMemberDialog = () => {
         }
     };
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
         const validation = addMemberFormSchema.safeParse(normalizedFormData);
         if (!validation.success) {
-            setErrors(flattenError(validation.error).fieldErrors);
+            const fieldErrors = flattenError(validation.error).fieldErrors;
+            setErrors({
+                fullName: fieldErrors.fullName?.[0] || "",
+                gymCode: fieldErrors.gymCode?.[0] || "",
+                phone: fieldErrors.phone?.[0] || "",
+            });
             return;
         }
 
-        setErrors({});
+        setErrors({ fullName: "", gymCode: "", phone: "" });
         await addMember();
     };
 
@@ -91,7 +87,7 @@ const AddMemberDialog = () => {
                 setOpen(nextOpen);
 
                 if (!nextOpen) {
-                    setErrors({});
+                    setErrors({ fullName: "", gymCode: "", phone: "" });
                     setFormData(initialFormData);
                 }
             }}
@@ -117,15 +113,13 @@ const AddMemberDialog = () => {
                                     value={formData.fullName}
                                     onChange={(event) => {
                                         setFormData((current) => ({ ...current, fullName: event.target.value }));
-                                        setErrors((current) => ({ ...current, fullName: undefined }));
+                                        setErrors((current) => ({ ...current, fullName: "" }));
                                     }}
                                     aria-invalid={Boolean(errors.fullName)}
                                     className="h-12 pl-12"
                                 />
                             </div>
-                            {errors.fullName?.map((error) => (
-                                <FieldError key={error}>{error}</FieldError>
-                            ))}
+                            {errors.fullName ? <FieldError>{errors.fullName}</FieldError> : null}
                         </Field>
 
                         <Field className="space-y-0">
@@ -141,15 +135,13 @@ const AddMemberDialog = () => {
                                     value={formData.gymCode}
                                     onChange={(event) => {
                                         setFormData((current) => ({ ...current, gymCode: event.target.value }));
-                                        setErrors((current) => ({ ...current, gymCode: undefined }));
+                                        setErrors((current) => ({ ...current, gymCode: "" }));
                                     }}
                                     aria-invalid={Boolean(errors.gymCode)}
                                     className="h-12 pl-12"
                                 />
                             </div>
-                            {errors.gymCode?.map((error) => (
-                                <FieldError key={error}>{error}</FieldError>
-                            ))}
+                            {errors.gymCode ? <FieldError>{errors.gymCode}</FieldError> : null}
                         </Field>
 
                         <Field className="space-y-0">
@@ -165,15 +157,13 @@ const AddMemberDialog = () => {
                                     value={formData.phone}
                                     onChange={(event) => {
                                         setFormData((current) => ({ ...current, phone: event.target.value }));
-                                        setErrors((current) => ({ ...current, phone: undefined }));
+                                        setErrors((current) => ({ ...current, phone: "" }));
                                     }}
                                     aria-invalid={Boolean(errors.phone)}
                                     className="h-12 pl-12"
                                 />
                             </div>
-                            {errors.phone?.map((error) => (
-                                <FieldError key={error}>{error}</FieldError>
-                            ))}
+                            {errors.phone ? <FieldError>{errors.phone}</FieldError> : null}
                             {!errors.phone ? <FieldDescription>Leave this empty if you do not want to save a phone number yet.</FieldDescription> : null}
                         </Field>
 

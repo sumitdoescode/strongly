@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { type FormEvent, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Key, PenTool } from "lucide-react";
@@ -9,20 +9,13 @@ import { toast } from "sonner";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { flattenError } from "zod";
 
-type FormData = {
-    fullName: string;
-    gymCode: string;
-};
-
-type FormErrors = Partial<Record<keyof FormData, string[]>>;
-
 const CompleteProfile = () => {
-    const [formData, setFormData] = useState<FormData>({
+    const [formData, setFormData] = useState({
         fullName: "",
         gymCode: "",
     });
     const [isCompleting, setIsCompleting] = useState(false);
-    const [errors, setErrors] = useState<FormErrors>({});
+    const [errors, setErrors] = useState({ fullName: "", gymCode: "" });
 
     const completeProfile = async () => {
         try {
@@ -40,16 +33,20 @@ const CompleteProfile = () => {
         }
     };
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const validation = completeProfileSchema.safeParse(formData);
         if (!validation.success) {
-            setErrors(flattenError(validation.error).fieldErrors);
+            const fieldErrors = flattenError(validation.error).fieldErrors;
+            setErrors({
+                fullName: fieldErrors.fullName?.[0] || "",
+                gymCode: fieldErrors.gymCode?.[0] || "",
+            });
             return;
         }
 
-        setErrors({});
+        setErrors({ fullName: "", gymCode: "" });
         await completeProfile();
     };
 
@@ -72,15 +69,13 @@ const CompleteProfile = () => {
                             value={formData.fullName}
                             onChange={(e) => {
                                 setFormData({ ...formData, fullName: e.target.value });
-                                setErrors({ ...errors, fullName: undefined });
+                                setErrors({ ...errors, fullName: "" });
                             }}
                             aria-invalid={Boolean(errors.fullName)}
                             className="pl-12 h-14 bg-zinc-900/50 border-zinc-800 text-foreground placeholder:text-zinc-500 placeholder:text-base focus:border-primary focus:ring focus:ring-primary/20 transition-all duration-200 md:text-lg"
                         />
                     </div>
-                    {errors.fullName?.map((error) => (
-                        <FieldError key={error}>{error}</FieldError>
-                    ))}
+                    {errors.fullName ? <FieldError>{errors.fullName}</FieldError> : null}
                 </Field>
 
                 <Field className="">
@@ -98,15 +93,13 @@ const CompleteProfile = () => {
                             value={formData.gymCode}
                             onChange={(e) => {
                                 setFormData({ ...formData, gymCode: e.target.value });
-                                setErrors({ ...errors, gymCode: undefined });
+                                setErrors({ ...errors, gymCode: "" });
                             }}
                             aria-invalid={Boolean(errors.gymCode)}
                             className="pl-12 h-14 bg-zinc-900/50 border-zinc-800 text-foreground placeholder:text-zinc-500 placeholder:text-base focus:border-primary focus:ring focus:ring-primary/20 transition-all duration-200 text-lg md:text-lg"
                         />
                     </div>
-                    {errors.gymCode?.map((error) => (
-                        <FieldError key={error}>{error}</FieldError>
-                    ))}
+                    {errors.gymCode ? <FieldError>{errors.gymCode}</FieldError> : null}
                     {!errors.gymCode && <FieldDescription className="text-zinc-500 text-xs">Ask your gym staff for the access code</FieldDescription>}
                 </Field>
 

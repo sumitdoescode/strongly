@@ -3,25 +3,19 @@ import { Clock3 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 
-export type FeedAttendanceItem = {
-    id: string;
-    time: string;
-    fullName: string;
-    userId?: string;
-    image?: string | null;
-};
-
 export type FeedGroup = {
     date: string;
     day: string;
-    attendances: FeedAttendanceItem[];
+    attendances: {
+        id: string;
+        time: string;
+        fullName: string;
+        userId?: string;
+        image?: string | null;
+    }[];
 };
 
-type FeedResultsProps = {
-    feed: FeedGroup[];
-};
-
-const FeedResults = ({ feed }: FeedResultsProps) => {
+const FeedResults = ({ feed }: { feed: FeedGroup[] }) => {
     if (feed.length === 0) {
         return (
             <Card className="mt-6 border border-dashed border-border/70 bg-card/60">
