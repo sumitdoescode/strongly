@@ -4,11 +4,9 @@ import { Types } from "mongoose";
 import { flattenError } from "zod";
 import { auth } from "@/lib/auth";
 import connectDB, { getDb } from "@/lib/db";
-import Attendance from "@/models/Attendance";
+import { getOwnProfileSummary } from "@/lib/profile";
 import Member from "@/models/Member";
 import { completeProfileSchema, updateProfileSchema } from "@/schemas/schema";
-
-const TIME_ZONE = "Asia/Kolkata";
 
 // GET => /api/me, get own profile
 export const GET = async () => {
@@ -23,73 +21,16 @@ export const GET = async () => {
             return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
         }
 
-        // if profile is not completed, return error
-        if (!session.user.isProfileCompleted) {
+        const profile = await getOwnProfileSummary(session.user);
+
+        if (!profile) {
             return NextResponse.json({ success: false, error: "Profile is not completed" }, { status: 400 });
-        }
-
-        const member = await Member.findById(session.user.memberId).select("_id fullName gymCode").lean();
-
-        if (!member) {
-            return NextResponse.json({ success: false, error: "Member not found" }, { status: 404 });
-        }
-
-        const attendances = await Attendance.find({
-            member: new Types.ObjectId(session.user.memberId),
-        })
-            .sort({ createdAt: -1 })
-            .lean();
-
-        const today = new Date().toLocaleDateString("en-CA", { timeZone: TIME_ZONE });
-        const thisMonth = new Date().toLocaleDateString("en-CA", {
-            timeZone: TIME_ZONE,
-            year: "numeric",
-            month: "2-digit",
-        });
-
-        const totalAttendance = attendances.length;
-        const thisMonthAttendance = attendances.filter((attendance) => {
-            return (
-                new Date(attendance.createdAt).toLocaleDateString("en-CA", {
-                    timeZone: TIME_ZONE,
-                    year: "numeric",
-                    month: "2-digit",
-                }) === thisMonth
-            );
-        }).length;
-
-        const uniqueAttendanceDates = [...new Set(attendances.map((attendance) => new Date(attendance.createdAt).toLocaleDateString("en-CA", { timeZone: TIME_ZONE })))];
-
-        let streak = 0;
-        const streakDate = new Date();
-
-        if (uniqueAttendanceDates[0] !== today) {
-            streakDate.setDate(streakDate.getDate() - 1);
-        }
-
-        for (const attendanceDate of uniqueAttendanceDates) {
-            const expectedDate = streakDate.toLocaleDateString("en-CA", { timeZone: TIME_ZONE });
-
-            if (attendanceDate !== expectedDate) {
-                break;
-            }
-
-            streak += 1;
-            streakDate.setDate(streakDate.getDate() - 1);
         }
 
         return NextResponse.json(
             {
                 success: true,
-                data: {
-                    user: {
-                        ...session.user,
-                        totalAttendance,
-                        thisMonthAttendance,
-                        streak,
-                        ...member,
-                    },
-                },
+                data: { user: profile },
             },
             { status: 200 },
         );

@@ -5,6 +5,7 @@ import { headers } from "next/headers";
 import { addMemberSchema } from "@/schemas/schema";
 import { flattenError } from "zod";
 import Member from "@/models/Member";
+import { getAdminMembers } from "@/lib/admin-members";
 
 // add member (can be accessed by admin only)
 // POST => /api/admin/members
@@ -64,15 +65,7 @@ export const GET = async (request: NextRequest) => {
         const { searchParams } = new URL(request.url);
         const q = searchParams.get("q");
 
-        let filter = {};
-        if (q && q.trim()) {
-            filter = {
-                $or: [{ fullName: { $regex: q.trim(), $options: "i" } }, { gymCode: { $regex: q.trim(), $options: "i" } }],
-            };
-        }
-
-        const members = await Member.find(filter);
-        const totalMembersCount = await Member.countDocuments();
+        const { members, totalMembersCount } = await getAdminMembers(q || "");
         return NextResponse.json({ success: true, message: "Members retrieved successfully", data: { members, totalMembersCount } }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ success: false, error: error instanceof Error ? error.message : "Failed to fetch members" }, { status: 500 });

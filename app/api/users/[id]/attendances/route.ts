@@ -1,9 +1,10 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { headers } from "next/headers";
-import { Types, isValidObjectId } from "mongoose";
+import { isValidObjectId } from "mongoose";
 import { auth } from "@/lib/auth";
 import { getAttendanceHistory } from "@/lib/attendance-history";
-import connectDB, { getDb } from "@/lib/db";
+import connectDB from "@/lib/db";
+import { getUserProfileSummaryById } from "@/lib/profile";
 
 // GET => /api/users/[id]/attendances, get a user's attendance history
 export const GET = async (_request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
@@ -24,22 +25,9 @@ export const GET = async (_request: NextRequest, { params }: { params: Promise<{
             return NextResponse.json({ success: false, error: "Invalid user ID" }, { status: 400 });
         }
 
-        const db = getDb();
-        if (!db) {
-            throw new Error("Database connection failed");
-        }
+        const user = await getUserProfileSummaryById(id);
 
-        const user = await db.collection("user").findOne(
-            { _id: new Types.ObjectId(id) },
-            {
-                projection: {
-                    memberId: 1,
-                    isProfileCompleted: 1,
-                },
-            },
-        );
-
-        if (!user || !user.isProfileCompleted || !user.memberId) {
+        if (!user) {
             return NextResponse.json({ success: false, error: "User profile not found" }, { status: 404 });
         }
 

@@ -3,6 +3,7 @@ import { headers } from "next/headers";
 import { isValidObjectId } from "mongoose";
 import { flattenError } from "zod";
 import { auth } from "@/lib/auth";
+import { getAdminMemberById } from "@/lib/admin-members";
 import connectDB from "@/lib/db";
 import Member from "@/models/Member";
 import { updateMemberSchema } from "@/schemas/schema";
@@ -30,7 +31,7 @@ export const GET = async (request: NextRequest, { params }: { params: Promise<{ 
             return NextResponse.json({ success: false, error: "Invalid member ID" }, { status: 400 });
         }
 
-        const member = await Member.findById(id).select("_id fullName gymCode phone isActive").lean();
+        const member = await getAdminMemberById(id);
 
         if (!member) {
             return NextResponse.json({ success: false, error: "Member not found" }, { status: 404 });
