@@ -24,8 +24,8 @@ const AdminSearch = ({ initialSearch }: { initialSearch: string }) => {
 
     return (
         <form onSubmit={handleSearch} className="flex w-full items-center gap-2 mt-6">
-            <Input type="text" placeholder="Search by name.." className="text-lg md:text-lg px-3 py-2" value={search} onChange={(e) => setSearch(e.target.value)} />
-            <Button type="submit" className="text-base">
+            <Input type="text" placeholder="Search by name.." className="text-lg px-4 py-3" value={search} onChange={(e) => setSearch(e.target.value)} />
+            <Button type="submit" className="" size={"lg"}>
                 Search
             </Button>
         </form>
