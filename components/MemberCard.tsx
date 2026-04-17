@@ -3,7 +3,7 @@
 import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
-import { flattenError, z } from "zod";
+import { flattenError } from "zod";
 import { Key, Loader2, Pencil, Phone, Power, User, UserRound } from "lucide-react";
 import { toast } from "sonner";
 import { updateMemberSchema } from "@/schemas/schema";
@@ -13,12 +13,6 @@ import { Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogT
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
-
-const updateMemberFormSchema = z.object({
-    fullName: updateMemberSchema.shape.fullName,
-    gymCode: updateMemberSchema.shape.gymCode,
-    phone: z.union([z.literal(""), updateMemberSchema.shape.phone]).optional(),
-});
 
 const MemberCard = ({ _id, fullName, gymCode, phone, isActive }: { _id: string; fullName: string; gymCode: string; phone?: string; isActive: boolean }) => {
     const initialFormData = {
@@ -36,18 +30,15 @@ const MemberCard = ({ _id, fullName, gymCode, phone, isActive }: { _id: string; 
 
     const normalizedFormData = {
         ...formData,
-        phone: formData.phone.trim(),
+        phone: formData.phone.trim() || undefined,
     };
 
-    const isFormValid = updateMemberFormSchema.safeParse(normalizedFormData).success;
+    const isFormValid = updateMemberSchema.safeParse(normalizedFormData).success;
 
     const updateMember = async () => {
         try {
             setIsUpdating(true);
-            await axios.patch(`/api/admin/members/${_id}`, {
-                ...normalizedFormData,
-                phone: normalizedFormData.phone || undefined,
-            });
+            await axios.patch(`/api/admin/members/${_id}`, normalizedFormData);
             toast.success("Member updated successfully");
             setOpen(false);
             router.refresh();
@@ -66,7 +57,7 @@ const MemberCard = ({ _id, fullName, gymCode, phone, isActive }: { _id: string; 
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const validation = updateMemberFormSchema.safeParse(normalizedFormData);
+        const validation = updateMemberSchema.safeParse(normalizedFormData);
         if (!validation.success) {
             const fieldErrors = flattenError(validation.error).fieldErrors;
             setErrors({

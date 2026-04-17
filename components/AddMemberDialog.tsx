@@ -3,7 +3,7 @@
 import { type FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
-import { flattenError, z } from "zod";
+import { flattenError } from "zod";
 import { Key, Loader2, Phone, User } from "lucide-react";
 import { toast } from "sonner";
 import { addMemberSchema } from "@/schemas/schema";
@@ -18,12 +18,6 @@ const initialFormData = {
     phone: "",
 };
 
-const addMemberFormSchema = z.object({
-    fullName: addMemberSchema.shape.fullName,
-    gymCode: addMemberSchema.shape.gymCode,
-    phone: z.union([z.literal(""), addMemberSchema.shape.phone]).optional(),
-});
-
 const AddMemberDialog = () => {
     const [formData, setFormData] = useState(initialFormData);
     const [errors, setErrors] = useState({ fullName: "", gymCode: "", phone: "" });
@@ -33,18 +27,15 @@ const AddMemberDialog = () => {
 
     const normalizedFormData = {
         ...formData,
-        phone: formData.phone.trim(),
+        phone: formData.phone.trim() || undefined,
     };
 
-    const isFormValid = addMemberFormSchema.safeParse(normalizedFormData).success;
+    const isFormValid = addMemberSchema.safeParse(normalizedFormData).success;
 
     const addMember = async () => {
         try {
             setIsSaving(true);
-            await axios.post("/api/admin/members", {
-                ...normalizedFormData,
-                phone: normalizedFormData.phone || undefined,
-            });
+            await axios.post("/api/admin/members", normalizedFormData);
             toast.success("Member added successfully");
             setFormData(initialFormData);
             setErrors({ fullName: "", gymCode: "", phone: "" });
@@ -65,7 +56,7 @@ const AddMemberDialog = () => {
     const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const validation = addMemberFormSchema.safeParse(normalizedFormData);
+        const validation = addMemberSchema.safeParse(normalizedFormData);
         if (!validation.success) {
             const fieldErrors = flattenError(validation.error).fieldErrors;
             setErrors({
