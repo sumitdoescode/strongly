@@ -5,11 +5,11 @@ import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-const AdminSearch = ({ initialSearch }) => {
+const AdminSearch = ({ initialSearch }: { initialSearch: string }) => {
     const [search, setSearch] = useState(initialSearch);
     const router = useRouter();
 
-    const handleSearch = (e) => {
+    const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const value = search.trim();

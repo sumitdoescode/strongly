@@ -4,7 +4,7 @@ import Workflow from "@/components/Workflow";
 import Benefits from "@/components/Benefits";
 import CTA from "@/components/CTA";
 
-const MainLandingPage = () => {
+const LandingPage = () => {
     return (
         <main className="relative overflow-hidden bg-background">
             <Hero />
@@ -16,4 +16,4 @@ const MainLandingPage = () => {
     );
 };
 
-export default MainLandingPage;
+export default LandingPage;

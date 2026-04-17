@@ -15,7 +15,7 @@ const CompleteProfilePage = async () => {
     }
 
     if (session.user.isProfileCompleted) {
-        redirect("/");
+        redirect("/dashboard");
     }
 
     return (

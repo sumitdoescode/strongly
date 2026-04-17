@@ -33,7 +33,7 @@ const CompleteProfile = () => {
             toast.success("Profile completed successfully");
         } catch (error: unknown) {
             if (error instanceof AxiosError) {
-                toast.error(error.response?.data.message || "Failed to complete profile");
+                toast.error(error.response?.data?.error || "Failed to complete profile");
             }
         } finally {
             setIsCompleting(false);

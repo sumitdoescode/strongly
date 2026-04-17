@@ -10,7 +10,7 @@ import { Users } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-const page = async ({ searchParams }) => {
+const AdminPage = async ({ searchParams }: { searchParams: Promise<{ q?: string }> }) => {
     const session = await auth.api.getSession({
         headers: await headers(),
     });
@@ -71,7 +71,14 @@ const page = async ({ searchParams }) => {
 
                 <div className="mt-6 flex flex-col gap-2">
                     {members.map((member) => (
-                        <MemberCard key={member._id.toString()} {...member} />
+                        <MemberCard
+                            key={member._id.toString()}
+                            _id={member._id.toString()}
+                            fullName={member.fullName}
+                            gymCode={member.gymCode}
+                            phone={member.phone}
+                            isActive={member.isActive}
+                        />
                     ))}
                 </div>
             </Container>
@@ -79,4 +86,4 @@ const page = async ({ searchParams }) => {
     );
 };
 
-export default page;
+export default AdminPage;

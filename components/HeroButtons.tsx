@@ -32,9 +32,9 @@ const HeroButtons = () => {
 
     return (
         <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-start">
-            <Link href="/complete-profile" className="inline-flex text-base">
+            <Link href="/dashboard" className="inline-flex text-base">
                 <Button size={"lg"} variant={"default"} className={"h-11 rounded-full px-6 text-sm font-semibold uppercase tracking-[0.16em] cursor-pointer shadow-sm shadow-primary/20"}>
-                    Continue
+                    Go To Dashboard
                 </Button>
             </Link>
         </div>
