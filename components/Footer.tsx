@@ -3,12 +3,12 @@ import Link from "next/link";
 
 const Footer = () => {
     return (
-        <div className="py-2">
+        <div className="py-6">
             <Container>
                 <div className="flex flex-col items-center justify-center text-center">
-                    <p className="">
+                    <p className="text-base text-muted-foreground">
                         Developed by{" "}
-                        <Link href="https://sumitdoescode.me" className="text-primary underline" target="_blank">
+                        <Link href="https://sumitdoescode.me" className="text-foreground underline decoration-border underline-offset-4" target="_blank">
                             sumitdoescode
                         </Link>
                     </p>

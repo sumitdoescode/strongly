@@ -1,6 +1,6 @@
 "use client";
 import React from "react";
-import { Home, ArrowLeft, Search } from "lucide-react";
+import { Home, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const NotFound = () => {
@@ -25,7 +25,7 @@ const NotFound = () => {
                     <div className="space-y-8 mt-6">
                         <div className="space-y-4">
                             <h2 className="text-3xl md:text-5xl font-black text-white leading-tight">Page Not Found</h2>
-                            <p className="text-base text-muted-foreground font-medium max-w-lg mx-auto">The page you're looking for doesn't exist or has been moved to a different location.</p>
+                            <p className="text-base text-muted-foreground font-medium max-w-lg mx-auto">The page you&apos;re looking for doesn&apos;t exist or has been moved to a different location.</p>
                         </div>
                     </div>
 

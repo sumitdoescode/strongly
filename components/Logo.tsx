@@ -2,9 +2,8 @@ import Link from "next/link";
 
 const Logo = () => {
     return (
-        <Link href={"/"} className={`text-3xl font-bold tracking-tight uppercase text-primary`}>
-            Strong
-            <span className="text-white">ly</span>
+        <Link href="/" className="text-2xl font-black tracking-[-0.04em] text-foreground sm:text-[1.7rem]">
+            Strong<span className="text-primary">ly</span>
         </Link>
     );
 };

@@ -1,7 +1,6 @@
 import Container from "./Container";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { AlignJustify } from "lucide-react";
 // import Sidebar from "./Sidebar";
 import Logo from "./Logo";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -14,7 +13,7 @@ const Navbar = async () => {
     });
 
     return (
-        <nav className="text-primary py-2 fixed z-10 min-w-full border-b bg-background/20 backdrop-blur-md w-full">
+        <nav className="fixed z-10 min-w-full w-full border-b border-border/60 bg-background/70 py-2 text-foreground backdrop-blur-xl">
             <Container>
                 <div className="flex items-center justify-between">
                     {session ? (
@@ -23,7 +22,7 @@ const Navbar = async () => {
                             {/* <Sidebar /> */}
                             <div className="flex items-center gap-4">
                                 <Link href="/feed">
-                                    <Button variant="outline" className="text-foreground hover:text-foreground">
+                                    <Button variant="outline" className="border-border/70 bg-background/60 text-foreground hover:text-foreground">
                                         Feed
                                     </Button>
                                 </Link>

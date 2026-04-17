@@ -1,20 +1,19 @@
-import React from "react";
+import Features from "@/components/Features";
 import Hero from "@/components/Hero";
-import Performance from "@/components/Performance";
-import How from "@/components/How";
-import Why from "@/components/Why";
-import Start from "@/components/Start";
+import Workflow from "@/components/Workflow";
+import Benefits from "@/components/Benefits";
+import CTA from "@/components/CTA";
 
-const page = () => {
+const MainLandingPage = () => {
     return (
-        <>
+        <main className="relative overflow-hidden bg-background">
             <Hero />
-            <Performance />
-            <How />
-            <Why />
-            <Start />
-        </>
+            <Features />
+            <Workflow />
+            <Benefits />
+            <CTA />
+        </main>
     );
 };
 
-export default page;
+export default MainLandingPage;
