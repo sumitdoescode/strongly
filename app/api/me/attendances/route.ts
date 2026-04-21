@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
-import { getAttendanceHistory } from "@/lib/attendance-history";
 import connectDB from "@/lib/db";
 import Member from "@/models/Member";
 import Attendance from "@/models/Attendance";
@@ -74,34 +73,5 @@ export const POST = async () => {
         return NextResponse.json({ success: true, message: "Attendance marked successfully" }, { status: 200 });
     } catch (error) {
         return NextResponse.json({ success: false, error: error instanceof Error ? error.message : "Failed to mark attendance" }, { status: 500 });
-    }
-};
-
-// GET => /api/me/attendances, get own attendance history
-export const GET = async () => {
-    try {
-        await connectDB();
-
-        const session = await auth.api.getSession({
-            headers: await headers(),
-        });
-
-        if (!session) {
-            return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-        }
-
-        if (!session.user.isProfileCompleted || !session.user.memberId) {
-            return NextResponse.json({ success: false, error: "Profile is not completed" }, { status: 400 });
-        }
-
-        const data = await getAttendanceHistory(session.user.memberId, true);
-
-        if (!data) {
-            return NextResponse.json({ success: false, error: "Member not found" }, { status: 404 });
-        }
-
-        return NextResponse.json({ success: true, data }, { status: 200 });
-    } catch (error) {
-        return NextResponse.json({ success: false, error: error instanceof Error ? error.message : "Failed to fetch attendance history" }, { status: 500 });
     }
 };

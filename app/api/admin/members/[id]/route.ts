@@ -3,45 +3,9 @@ import { headers } from "next/headers";
 import { isValidObjectId } from "mongoose";
 import { flattenError } from "zod";
 import { auth } from "@/lib/auth";
-import { getAdminMemberById } from "@/lib/admin-members";
 import connectDB from "@/lib/db";
 import Member from "@/models/Member";
 import { updateMemberSchema } from "@/schemas/schema";
-
-// GET => /api/admin/members/[id]
-export const GET = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {
-    try {
-        await connectDB();
-
-        const session = await auth.api.getSession({
-            headers: await headers(),
-        });
-
-        if (!session) {
-            return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-        }
-
-        if (session.user.role !== "admin") {
-            return NextResponse.json({ success: false, error: "Forbidden" }, { status: 403 });
-        }
-
-        const { id } = await params;
-
-        if (!isValidObjectId(id)) {
-            return NextResponse.json({ success: false, error: "Invalid member ID" }, { status: 400 });
-        }
-
-        const member = await getAdminMemberById(id);
-
-        if (!member) {
-            return NextResponse.json({ success: false, error: "Member not found" }, { status: 404 });
-        }
-
-        return NextResponse.json({ success: true, member }, { status: 200 });
-    } catch (error) {
-        return NextResponse.json({ success: false, error: error instanceof Error ? error.message : "Failed to fetch member" }, { status: 500 });
-    }
-};
 
 // PATCH => /api/admin/members/[id]
 export const PATCH = async (request: NextRequest, { params }: { params: Promise<{ id: string }> }) => {

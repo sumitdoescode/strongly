@@ -5,7 +5,6 @@ import { headers } from "next/headers";
 import { addMemberSchema } from "@/schemas/schema";
 import { flattenError } from "zod";
 import Member from "@/models/Member";
-import { getAdminMembers } from "@/lib/admin-members";
 
 // add member (can be accessed by admin only)
 // POST => /api/admin/members
@@ -45,29 +44,3 @@ export const POST = async (request: NextRequest) => {
     }
 };
 
-// get all members (can be accessed by admin only)
-// GET => /api/admin/members
-export const GET = async (request: NextRequest) => {
-    try {
-        await connectDB();
-        const session = await auth.api.getSession({
-            headers: await headers(),
-        });
-
-        if (!session) {
-            return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-        }
-
-        if (session.user.role !== "admin") {
-            return NextResponse.json({ success: false, error: "You are not authorized to perform this action" }, { status: 403 });
-        }
-
-        const { searchParams } = new URL(request.url);
-        const q = searchParams.get("q");
-
-        const { members, totalMembersCount } = await getAdminMembers(q || "");
-        return NextResponse.json({ success: true, message: "Members retrieved successfully", data: { members, totalMembersCount } }, { status: 200 });
-    } catch (error) {
-        return NextResponse.json({ success: false, error: error instanceof Error ? error.message : "Failed to fetch members" }, { status: 500 });
-    }
-};

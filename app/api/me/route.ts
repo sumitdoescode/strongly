@@ -4,40 +4,8 @@ import { Types } from "mongoose";
 import { flattenError } from "zod";
 import { auth } from "@/lib/auth";
 import connectDB, { getDb } from "@/lib/db";
-import { getOwnProfileSummary } from "@/lib/profile";
 import Member from "@/models/Member";
 import { completeProfileSchema, updateProfileSchema } from "@/schemas/schema";
-
-// GET => /api/me, get own profile
-export const GET = async () => {
-    try {
-        await connectDB();
-
-        const session = await auth.api.getSession({
-            headers: await headers(),
-        });
-
-        if (!session) {
-            return NextResponse.json({ success: false, error: "Unauthorized" }, { status: 401 });
-        }
-
-        const profile = await getOwnProfileSummary(session.user);
-
-        if (!profile) {
-            return NextResponse.json({ success: false, error: "Profile is not completed" }, { status: 400 });
-        }
-
-        return NextResponse.json(
-            {
-                success: true,
-                data: { user: profile },
-            },
-            { status: 200 },
-        );
-    } catch (error) {
-        return NextResponse.json({ success: false, error: error instanceof Error ? error.message : "Internal Server Error" }, { status: 500 });
-    }
-};
 
 // POST => /api/me, complete own profile
 export const POST = async (request: NextRequest) => {
