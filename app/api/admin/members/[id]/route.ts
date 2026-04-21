@@ -72,3 +72,6 @@ export const PATCH = async (request: NextRequest, { params }: { params: Promise<
         return NextResponse.json({ success: false, error: error instanceof Error ? error.message : "Failed to update member" }, { status: 500 });
     }
 };
+
+// DELETE => /api/admin/members/[id]
+// we will not delete the member from the database, we will just deactivate the member
