@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  serverExternalPackages: ["mongoose", "mongodb", "better-auth", "@better-auth/mongo-adapter"],
 };
 
 export default nextConfig;
