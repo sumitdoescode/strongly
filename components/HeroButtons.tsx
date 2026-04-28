@@ -8,8 +8,9 @@ import { Skeleton } from "./ui/skeleton";
 const HeroButtons = () => {
     const { data: session, isPending } = authClient.useSession();
 
+    console.log(session);
+
     const loginWithGoogle = async () => {
-        console.log("coming here");
         await authClient.signIn.social({
             provider: "google",
             callbackURL: "/",
@@ -20,6 +21,7 @@ const HeroButtons = () => {
         return <Skeleton className="mt-8 h-10 w-40 rounded-full" />;
     }
 
+    // if not logged in
     if (!session) {
         return (
             <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-start">

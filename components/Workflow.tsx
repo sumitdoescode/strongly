@@ -30,7 +30,7 @@ const Workflow = () => {
 
                 <div className="mt-12 grid gap-4 md:grid-cols-3">
                     {steps.map((step) => (
-                        <div key={step.number} className="rounded-[1.6rem] border border-border/70 bg-card/45 p-6 shadow-[0_24px_70px_-52px_rgba(0,0,0,1)] backdrop-blur-sm">
+                        <div key={step.number} className="cursor-pointer rounded-[1.6rem] border border-border/70 bg-card/45 p-6 shadow-[0_24px_70px_-52px_rgba(0,0,0,1)] backdrop-blur-sm">
                             <span className="inline-flex rounded-full border border-primary/20 bg-primary/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-primary">{step.number}</span>
                             <h3 className="mt-4 text-xl font-bold tracking-tight">{step.title}</h3>
                             <p className="mt-3 text-base leading-7 text-muted-foreground">{step.description}</p>

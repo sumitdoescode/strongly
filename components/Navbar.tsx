@@ -35,12 +35,7 @@ const Navbar = () => {
 
                         return (
                             <Link key={href} href={href}>
-                                <span
-                                    className={cn(
-                                        "inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
-                                        isActive && "bg-muted text-foreground",
-                                    )}
-                                >
+                                <span className={cn("inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground", isActive && "bg-muted text-foreground")}>
                                     <Icon className="size-4" />
                                     {label}
                                 </span>
@@ -90,12 +85,7 @@ const Navbar = () => {
 
                             return (
                                 <Link key={href} href={href} className="shrink-0">
-                                    <span
-                                        className={cn(
-                                            "inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground",
-                                            isActive && "bg-muted text-foreground",
-                                        )}
-                                    >
+                                    <span className={cn("inline-flex items-center gap-2 rounded-full px-3 py-1.5 text-sm text-muted-foreground transition-colors hover:bg-muted hover:text-foreground", isActive && "bg-muted text-foreground")}>
                                         <Icon className="size-4" />
                                         {label}
                                     </span>
