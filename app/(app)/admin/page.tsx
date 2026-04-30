@@ -19,7 +19,7 @@ const AdminPage = async ({ searchParams }: { searchParams: Promise<{ q?: string 
         redirect("/");
     }
 
-    if (session.user.role !== "admin") {
+    if (session?.user?.role !== "admin") {
         redirect("/dashboard");
     }
 
@@ -62,14 +62,7 @@ const AdminPage = async ({ searchParams }: { searchParams: Promise<{ q?: string 
 
                 <div className="mt-6 flex flex-col gap-2">
                     {members.map((member) => (
-                        <MemberCard
-                            key={member._id.toString()}
-                            _id={member._id.toString()}
-                            fullName={member.fullName}
-                            gymCode={member.gymCode}
-                            phone={member.phone}
-                            isActive={member.isActive}
-                        />
+                        <MemberCard key={member._id.toString()} _id={member._id.toString()} fullName={member.fullName} gymCode={member.gymCode} phone={member.phone} isActive={member.isActive} />
                     ))}
                 </div>
             </Container>
