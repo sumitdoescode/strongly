@@ -48,7 +48,7 @@ const FeedResults = ({ feed }: { feed: FeedGroup[] }) => {
                                             </Avatar>
                                             <div>
                                                 <h3 className="text-base font-semibold text-foreground">{attendance.fullName}</h3>
-                                                <p className="text-sm text-muted-foreground">{attendance.userId ? "Open profile" : "Member check-in"}</p>
+                                                {/* <p className="text-sm text-muted-foreground">{attendance.userId ? "Member check-in" : "Open profile"}</p> */}
                                             </div>
                                         </div>
 

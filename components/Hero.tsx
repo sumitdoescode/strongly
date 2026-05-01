@@ -1,5 +1,5 @@
 import Container from "@/components/Container";
-import HeroButtons from "./HeroButtons";
+import HeroButton from "./HeroButton";
 
 const summaryItems = ["Live attendance updates", "Clear streak tracking", "Simple gym admin flow"];
 
@@ -18,9 +18,7 @@ const Hero = () => {
                     </h1>
                     <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-muted-foreground sm:text-xl">Strongly helps gyms manage member attendance without messy logs, unclear streaks, or an overbuilt dashboard.</p>
 
-                    <div className="flex justify-center">
-                        <HeroButtons />
-                    </div>
+                    <HeroButton />
 
                     <div className="mt-12 grid gap-3 sm:grid-cols-3">
                         {summaryItems.map((item) => (

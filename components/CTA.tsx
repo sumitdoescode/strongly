@@ -1,5 +1,5 @@
 import Container from "./Container";
-import HeroButtons from "./HeroButtons";
+import HeroButton from "./HeroButton";
 
 const CTA = () => {
     return (
@@ -10,9 +10,7 @@ const CTA = () => {
                     <h2 className="mx-auto mt-4 max-w-3xl text-4xl font-black tracking-[-0.03em] text-foreground sm:text-5xl">A better attendance flow for your gym.</h2>
                     <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-muted-foreground sm:text-lg">Keep member check-ins simple and make attendance easier to understand.</p>
 
-                    <div className="flex justify-center">
-                        <HeroButtons />
-                    </div>
+                    <HeroButton />
                 </div>
             </Container>
         </section>
