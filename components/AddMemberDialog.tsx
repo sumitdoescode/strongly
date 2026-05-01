@@ -1,6 +1,6 @@
 "use client";
 
-import { type FormEvent, useState } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import axios, { AxiosError } from "axios";
 import { flattenError } from "zod";
@@ -53,9 +53,10 @@ const AddMemberDialog = () => {
         }
     };
 
-    const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const handleSubmit = async (e: any) => {
+        e.preventDefault();
 
+        // client side validation
         const validation = addMemberSchema.safeParse(normalizedFormData);
         if (!validation.success) {
             const fieldErrors = flattenError(validation.error).fieldErrors;

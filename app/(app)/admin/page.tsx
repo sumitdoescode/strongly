@@ -4,8 +4,8 @@ import AdminSearch from "@/components/AdminSearch";
 import MemberCard from "@/components/MemberCard";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { auth } from "@/lib/auth";
-import { getAdminMembers } from "@/lib/admin-members";
 import connectDB from "@/lib/db";
+import Member from "@/models/Member";
 import { Users } from "lucide-react";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
@@ -28,7 +28,14 @@ const AdminPage = async ({ searchParams }: { searchParams: Promise<{ q?: string 
 
     await connectDB();
 
-    const { members, totalMembersCount } = await getAdminMembers(search);
+    const members = await Member.find(
+        search
+            ? {
+                  $or: [{ fullName: { $regex: search, $options: "i" } }, { gymCode: { $regex: search, $options: "i" } }],
+              }
+            : {},
+    ).lean();
+    const totalMembersCount = await Member.countDocuments();
 
     return (
         <section className="py-24 grow">

@@ -14,7 +14,7 @@ const ProfileStats = ({ totalAttendance, thisMonthAttendance, streak }: { totalA
         <div className="mt-8 grid gap-3 md:grid-cols-3">
             {statItems.map(({ key, label, icon: Icon, tone }) => (
                 <Card key={key} className="border border-border/60 bg-card/80">
-                    <CardHeader className="flex flex-row items-center justify-between py-5">
+                    <CardHeader className="flex flex-row items-center justify-between py-3">
                         <div>
                             <p className="text-sm text-muted-foreground">{label}</p>
                             <h2 className="mt-2 text-3xl font-black tracking-[-0.04em]">{values[key]}</h2>

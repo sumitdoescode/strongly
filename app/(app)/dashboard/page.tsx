@@ -37,7 +37,7 @@ const DashboardPage = async () => {
         <section className="pb-16">
             <Container>
                 <Card className="overflow-hidden border border-border/60 bg-card/80">
-                    <CardContent className="relative px-6 py-8 sm:px-8">
+                    <CardContent className="relative">
                         <div className="pointer-events-none absolute -left-10 -top-12 size-40 rounded-full bg-primary/10 blur-3xl" />
                         <div className="relative flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
                             <div className="flex items-start gap-4">
@@ -51,7 +51,6 @@ const DashboardPage = async () => {
                                         {profile.role === "admin" ? <Badge>Admin</Badge> : null}
                                     </div>
                                     <h1 className="mt-3 text-4xl font-black tracking-[-0.05em]">{profile.fullName}</h1>
-                                    <p className="mt-2 max-w-2xl text-base leading-7 text-muted-foreground">Track your attendance, streak, and current member status in one place.</p>
                                 </div>
                             </div>
 
