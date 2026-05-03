@@ -74,4 +74,4 @@ export const PATCH = async (request: NextRequest, { params }: { params: Promise<
 };
 
 // DELETE => /api/admin/members/[id]
-// we will not delete the member from the database, we will just deactivate the member
+// we will not let admin delete the member from the database, it can be marked as active/unactive
